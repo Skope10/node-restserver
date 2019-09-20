@@ -1,11 +1,34 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const _ = require('underscore');
 
 const app = express();
 const Usuario = require('../models/usuario');
 
 app.get('/usuario', function (req, res) {
-  res.send('GET Users');
+
+  let desde = req.query.desde || 0;
+  desde = Number(desde);
+
+  let limite = req.query.limite || 5;
+  limite = Number(limite);
+
+  Usuario.find({})
+    .skip(desde)
+    .limit(limite)
+    .exec((err, usuarios) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err,
+        });
+      }
+      res.json({
+        ok: true,
+        usuarios
+      })
+    })
+
 });
 
 app.post('/usuario', function (req, res) {
@@ -26,7 +49,7 @@ app.post('/usuario', function (req, res) {
         err,
       });
     }
-    
+
     res.json({
       ok: true,
       usuario: usuarioDB,
@@ -36,10 +59,10 @@ app.post('/usuario', function (req, res) {
 
 app.put('/usuario/:id', function (req, res) {
   let id = req.params.id;
-  let body = req.body;
+  let body = _.pick(req.body, ['name', 'email', 'role', 'estado']);
 
-  Usuario.findByIdAndUpdate( id, body, {new :true, runValidators: true}, (err, usuarioDB) => {
-    
+  Usuario.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, usuarioDB) => {
+
     if (err) {
       return res.status(400).json({
         ok: false,
