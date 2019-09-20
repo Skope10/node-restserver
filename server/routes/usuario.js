@@ -13,7 +13,12 @@ app.get('/usuario', function (req, res) {
   let limite = req.query.limite || 5;
   limite = Number(limite);
 
-  Usuario.find({})
+  Usuario.find(
+    {//condiciones de busqueda
+      estado: true
+    },//datos a mostrar 
+    'name email role',
+  )
     .skip(desde)
     .limit(limite)
     .exec((err, usuarios) => {
@@ -23,9 +28,16 @@ app.get('/usuario', function (req, res) {
           err,
         });
       }
-      res.json({
-        ok: true,
-        usuarios
+
+      Usuario.count({
+        //condiciones iguales a las de arriba
+        estado: true
+      }, (err, conteo) => {
+        res.json({
+          ok: true,
+          usuarios,
+          conteo,
+        })
       })
     })
 
@@ -68,6 +80,36 @@ app.put('/usuario/:id', function (req, res) {
         ok: false,
         err,
       });
+    };
+
+    res.json({
+      ok: true,
+      usuario: usuarioDB
+    });
+  });
+
+});
+
+app.delete('/usuarioLogico/:id', function (req, res) {
+  let id = req.params.id;
+  let body = { estado: false };
+
+  Usuario.findByIdAndUpdate(id, body, { new: true }, (err, usuarioDB) => {
+
+    if (err) {
+      return res.status(400).json({
+        ok: false,
+        err,
+      });
+    };
+
+    if (!usuarioDB) {
+      return res.status(400).json({
+        ok: false,
+        err: {
+          message: 'Usuario no encontrado'
+        },
+      });
     }
 
     res.json({
@@ -78,8 +120,34 @@ app.put('/usuario/:id', function (req, res) {
 
 });
 
-app.delete('/usuario', function (req, res) {
-  res.send('DELETE User');
+app.delete('/usuarioFisico/:id', function (req, res) {
+
+  let id = req.params.id;
+  console.log(id);
+  Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
+
+    if (err) {
+      return res.status(400).json({
+        ok: false,
+        err,
+      });
+    };
+
+    if (!usuarioBorrado) {
+      return res.status(400).json({
+        ok: false,
+        err: {
+          message: 'usuario no encontrado'
+        },
+      });
+    }
+
+    res.json({
+      ok: true,
+      usuario: usuarioBorrado
+    });
+  });
+
 });
 
 
