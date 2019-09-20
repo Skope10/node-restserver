@@ -56,7 +56,7 @@ app.put('/usuario/:id', function (req, res) {
 });
 
 app.delete('/usuario', function (req, res) {
-  res.send('DELETE User');
+  res.send('DELETE User 3');
 });
 
 
