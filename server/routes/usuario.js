@@ -15,7 +15,6 @@ app.get('/usuario', function (req, res) {
 
   Usuario.find(
     {//condiciones de busqueda
-      estado: true
     },//datos a mostrar 
     'name email role',
   )
@@ -31,7 +30,6 @@ app.get('/usuario', function (req, res) {
 
       Usuario.count({
         //condiciones iguales a las de arriba
-        estado: true
       }, (err, conteo) => {
         res.json({
           ok: true,

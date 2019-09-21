@@ -12,14 +12,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 app.use(require('./routes/usuario'));
+app.use(require('./routes/cliente'));
 
 app.get('/', function (req, res) {
   res.send('Hello World');
 });
 
-mongoose.connect('mongodb://localhost:27017/cafe', { useNewUrlParser: true })
-  .then(console.log('BD ONLINE BBY'))
-  .catch(error => handleError(error));
+mongoose.connect(process.env.URLDB,
+  { useNewUrlParser: true, useCreateIndex: true },
+  (err, res) => {
+    if (err) throw err;
+    console.log('BD ONLINE');
+});
 
 app.listen(process.env.PORT, () => {
   console.log('ESCUCHANDO PUERTO ', process.env.PORT)
