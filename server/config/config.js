@@ -29,7 +29,7 @@ let urlDB;
 if(process.env.NODE_ENV === 'dev'){
     urlDB = 'mongodb://localhost:27017/cafe';
 }else{
-    urlDB = 'mongodb+srv://ferfenix:piCcA5tpmWilK4fu@coffee-cluster-dzd50.mongodb.net/cafe';
+    urlDB = process.env.MONGO_URL;
 }
 
 //para codificar el url del servidor remoto, se debe de hacer una variable de entorno 
