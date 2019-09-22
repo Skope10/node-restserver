@@ -11,8 +11,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json());
-app.use(require('./routes/usuario'));
-app.use(require('./routes/cliente'));
+app.use(require('./routes'));
 
 app.get('/', function (req, res) {
   res.send('Hello World');
