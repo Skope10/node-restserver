@@ -6,5 +6,6 @@ app.use(require('./cliente'));
 app.use(require('./categoria'));
 app.use(require('./login'));
 app.use(require('./producto'));
+app.use(require('./upload'));
 
 module.exports = app;
